@@ -13,3 +13,17 @@
     (is (.contains rslt "Hydrogen"))
     (is (.contains rslt "Deuterium"))
     (is (.contains rslt "Meitnerium")))))
+
+
+(deftest test-all-isotopes-dict
+  (testing "all-isotopes-dict"
+    (let [rslt (all-isotopes-dict)]
+      (is (contains? rslt :H))
+      (is (contains? rslt :D))
+      (is (contains? rslt :Mt))
+      (is (contains? rslt :C))
+      (is (contains? rslt :N))
+      (is (contains? rslt :O))
+    )
+   )
+)

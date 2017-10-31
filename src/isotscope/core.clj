@@ -1,6 +1,7 @@
 (ns isotscope.core
   (:gen-class)
-  (:require [cheshire.core :refer :all]))
+  (:require [cheshire.core])
+  (:require [clojure.walk]))
 
 (import java.util.Date)
 (import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
@@ -14,7 +15,7 @@
 
 
 (defn all-isotopes-dict []
-  (parse-string all-isotopes-str))
+  (clojure.walk/keywordize-keys (cheshire.core/parse-string (all-isotopes-str))))
 
 
 
