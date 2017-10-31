@@ -40,6 +40,21 @@
       (is (contains? rslt :C))
       (is (contains? rslt :N))
       (is (contains? rslt :O))
+    )))
+
+
+(deftest test-isotopes-nom-mass
+  (testing "isotopes-nom-mass")
+  (let [rslt (isotopes-nom-mass :C)]
+    (is (= 2 (alength rslt)))
+    (is (= 12 (nth rslt 0)))
+  )
+  )
+
+
+(deftest test-isopat
+  (testing "isopat")
+  (let [sf {:C 10 :H 10}]
+    (is (true? (rand-isopat sf)))
     )
-   )
-)
+  )
