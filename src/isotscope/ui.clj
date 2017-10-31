@@ -14,17 +14,35 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(defproject isotscope "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-  :license {:name "GPL3"
-            :url "https://www.gnu.org/licenses/gpl-3.0.en.html"}
-  :dependencies [[org.clojure/clojure "1.8.0"],
-                 [org.openscience.cdk/cdk-bundle "2.0"]
-                 [uk.ac.cam.ch.opsin/opsin-core "2.3.1"]
-                 [cheshire "5.8.0"]
-                 ]
-  :resource-paths ["resources/jfxrt.jar"]
-  :main ^:skip-aot isotscope.core
-  :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+(ns isotscope.ui)
+(import javax.swing.*)
+
+
+(defn ui-main (do
+(def app (JFrame.))
+)
+)
+
+
+
+(defn -main
+  "I don't do a whole lot ... yet."
+  [& args]
+  (println "Hello, World!")
+  (ui-main)
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;;
