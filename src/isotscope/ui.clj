@@ -15,22 +15,20 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (ns isotscope.ui)
-(import javax.swing.*)
+(import javax.swing.JFrame)
+(import javax.swing.JEditorPane)
+
+(defn ui-main [] (let [app (JFrame.)]
+                 (.setSize app 500 500)
+                 (.setVisible app true)
+                 (.add (.getContentPane app) (JEditorPane.))
+                 app))
+;;)
+;;)
 
 
-(defn ui-main (do
-(def app (JFrame.))
-)
-)
 
 
-
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!")
-  (ui-main)
-  )
 
 
 

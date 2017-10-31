@@ -17,7 +17,9 @@
 (ns isotscope.isotope
   (:gen-class)
   (:require [cheshire.core])
-  (:require [clojure.walk]))
+  (:require [clojure.walk])
+  (:require [clojure.java.io :as io])
+  )
 
 (import java.util.Date)
 (import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
@@ -34,7 +36,7 @@
 
 
 (defn all-isotopes-str []
-  (slurp (.getFile (clojure.java.io/resource "all_isotopes.json"))))
+  (slurp (.getFile (io/resource "all_isotopes.json"))))
 
 (defn compute-all-isotopes-dict []
     (clojure.walk/keywordize-keys (cheshire.core/parse-string (all-isotopes-str))))
