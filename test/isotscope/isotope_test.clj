@@ -16,7 +16,6 @@
 
 (ns isotscope.isotope-test
   (:require [clojure.test :refer :all]
-            [isotscope.isotope :refer :all]
             [isotscope.core :refer :all]))
 
 (deftest a-test

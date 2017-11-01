@@ -24,7 +24,6 @@
                  [uk.ac.cam.ch.opsin/opsin-core "2.3.1"]
                  [cheshire "5.8.0"]
                  ]
-  :resource-paths ["resources/jfxrt.jar"]
   :main ^:skip-aot isotscope.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
