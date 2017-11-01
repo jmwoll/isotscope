@@ -16,7 +16,7 @@
 
 (ns isotscope.isotope-test
   (:require [clojure.test :refer :all]
-            [isotscope.core :refer :all]))
+            [isotscope.isotope :refer :all]))
 
 (deftest a-test
   (testing "Check (= 1 1)"
@@ -55,6 +55,6 @@
 (deftest test-rand-isopat-gen
   (testing "rand-isopat-gen")
   (let [sf {:C 10 :H 10}]
-    (is (true? (rand-isopat-gen sf)))
+    (is (< 2 (count (rand-isopat-gen sf))))
     )
   )

@@ -14,24 +14,26 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 (ns isotscope.ui)
 (import javax.swing.JFrame)
 (import javax.swing.JEditorPane)
+(import java.awt.Color)
+
+
+(defn setup-frame [app]
+  (let [cont-pane (.getContentPane app)]
+  (.setSize app 500 500)
+  (.setVisible app true)
+  (.setDefaultCloseOperation app JFrame/EXIT_ON_CLOSE)
+  ;;(.add cont-pane (JEditorPane.))
+  (.setBackground cont-pane Color/BLACK)
+  )
+  )
 
 (defn ui-main [] (let [app (JFrame.)]
-                 (.setSize app 500 500)
-                 (.setVisible app true)
-                 (.add (.getContentPane app) (JEditorPane.))
+                 (setup-frame app)
                  app))
-;;)
-;;)
-
-
-
-
-
-
-
 
 
 
