@@ -17,17 +17,41 @@
 
 (ns isotscope.ui)
 (import javax.swing.JFrame)
-(import javax.swing.JEditorPane)
+(import javax.swing.JTextArea)
+(import javax.swing.JLabel)
 (import java.awt.Color)
-
+(import java.awt.GridBagLayout)
+(import java.awt.GridBagConstraints)
 
 (defn setup-frame [app]
-  (let [cont-pane (.getContentPane app)]
+  (let [cont-pane (.getContentPane app) editor (JTextArea. 5 20)
+        results-editor (JTextArea. 5 20)
+        back-col Color/BLACK
+        edit-col (Color. 20 20 50)
+        grid1 (GridBagConstraints.)
+        ]
   (.setSize app 500 500)
   (.setVisible app true)
   (.setDefaultCloseOperation app JFrame/EXIT_ON_CLOSE)
-  ;;(.add cont-pane (JEditorPane.))
-  (.setBackground cont-pane Color/BLACK)
+  (.setLayout cont-pane (GridBagLayout.))
+  (set! (.gridx grid1) 0)
+  (set! (.gridy grid1) 1)
+  (set! (.fill grid1) GridBagConstraints/HORIZONTAL)
+  (.add cont-pane editor grid1)
+  (.setBackground editor edit-col)
+  (.setForeground editor Color/WHITE)
+  (set! (.gridx grid1) 0)
+  (set! (.gridy grid1) 0)
+  (.add cont-pane (JLabel. "Sum Formula") grid1)
+  (set! (.gridx grid1) 0)
+  (set! (.gridy grid1) 2)
+  (.add cont-pane (JLabel. "Isotopic Pattern") grid1)
+  (set! (.gridx grid1) 0)
+  (set! (.gridy grid1) 3)
+  (.setBackground results-editor edit-col)
+  (.setForeground results-editor Color/WHITE)
+  (.add cont-pane results-editor grid1)
+  (.setBackground cont-pane back-col)
   )
   )
 
