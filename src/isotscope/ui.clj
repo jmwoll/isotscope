@@ -32,10 +32,11 @@
         grid1 (GridBagConstraints.)
         plot-panel (JPanel.)
         ]
-  (.setSize app 750 500)
+  (.setSize app 650 300);;750 500
   (.setVisible app true)
   (.setDefaultCloseOperation app JFrame/EXIT_ON_CLOSE)
   (.setLayout cont-pane (GridBagLayout.))
+  (set! (.insets grid1) (java.awt.Insets. 3,3,3,3))
   (set! (.gridwidth grid1) 1)
   (set! (.gridheight grid1) 1)
   (set! (.gridx grid1) 0)
