@@ -18,12 +18,12 @@
 (:require [isotscope.isotope])
   )
 
-
+;; C11 H22 O33 -> [C11 H22 O33] -> [[:C 11] [:H 22] [:O 33]]
+;; -> {:C 11 :H 22 :O 33}
 
 (defn tokenize-sf-string [sf]
   (filter not-empty (clojure.string/split sf #"\s+"))
   )
-
 
 
 (defn symbol-of-token [tok]
@@ -35,12 +35,27 @@
   (if (= 1 (count number)) (Integer. (first number)) 1)
 ))
 
-
 (defn parse-sf-token [token]
   (let [symb (symbol-of-token token)]
   (if (contains? (isotscope.isotope/all-isotopes-dict) symb)
     [symb (count-of-token token)]
-    [:Tc 11]
-  )
-  )
-)
+    [:Tc 11] ;; for now, handle IUPAC later
+  )))
+
+(defn to-tokens [toks]
+    ;;(map (fn [word] [(symbol-of-token word) (count-of-token word)]) words))
+    (map parse-sf-token toks))
+
+(defn assoc-or-add [d k v]
+  (if (contains? d k) (assoc d k (+ v (d k))) (assoc d k v)))
+
+(defn parse-sf-tokens [tokens]
+  (if (empty? tokens) {}
+    (let [hd (first tokens)
+        tl (rest tokens)]
+        (assoc-or-add (parse-sf-tokens tl) (first hd) (second hd))
+    )))
+
+
+(defn parse-sf-string [sf-str]
+  (parse-sf-tokens (to-tokens (tokenize-sf-string sf-str))))

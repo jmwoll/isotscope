@@ -19,6 +19,7 @@
   (:require [clojure.walk :refer :all])
   (:require [cheshire.core :refer :all])
   (:require [isotscope.ui])
+  (:require [isotscope.parser])
   )
 
 ;;(isotscope.ui/ui-main) ???

@@ -83,11 +83,15 @@
   )
 )
 
-(comment
 (deftest test-parse-sf-tokens
   (testing "parse-sf-tokens")
-  (let [sf "C10 H10"]
+  (let [sf [[:C 10] [:H 10]]]
     (is (= {:C 10 :H 10} (parse-sf-tokens sf)))
-    )
-  )
-  )
+    ))
+
+
+(deftest test-parse-sf-string
+  (testing "parse-sf-string")
+  (let [sf "C10 H10"]
+    (is (= {:C 10 :H 10} (parse-sf-string sf)))
+    ))
