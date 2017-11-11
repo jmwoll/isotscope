@@ -17,6 +17,8 @@
 
 (ns isotscope.ui
   (:require [isotscope.uihelpers :refer :all])
+  (:require [isotscope.parser :refer :all])
+  (:require [isotscope.isotope :refer :all])
   )
 (import javax.swing.JFrame)
 (import javax.swing.JPanel)
@@ -55,8 +57,11 @@
   ;; text editor.
   (defn on-update []
     (println "updating now!")
-
-    )
+    (let [inp (.getText editor) sf-dct (isotscope.parser/parse-sf-string inp)]
+    (println "text is " inp)
+    (println "dict is " sf-dct)
+    (println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct))
+  ))
   ;; end of the callback for editor updates
   (.addDocumentListener (.getDocument editor) (isotscope.uihelpers.DocListener. on-update))
   (set! (.gridx grid1) 0)
