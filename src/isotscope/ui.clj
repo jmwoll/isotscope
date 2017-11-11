@@ -60,7 +60,7 @@
     (let [inp (.getText editor) sf-dct (isotscope.parser/parse-sf-string inp)]
     (println "text is " inp)
     (println "dict is " sf-dct)
-    (println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct))
+    (println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
   ))
   ;; end of the callback for editor updates
   (.addDocumentListener (.getDocument editor) (isotscope.uihelpers.DocListener. on-update))

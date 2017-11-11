@@ -55,6 +55,6 @@
 (deftest test-rand-isopat-gen
   (testing "rand-isopat-gen")
   (let [sf {:C 10 :H 10}]
-    (is (< 2 (count (rand-isopat-gen sf))))
+    (is (< 2 (count (rand-isopat-gen sf 10000))))
     )
   )
