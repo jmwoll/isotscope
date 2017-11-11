@@ -24,6 +24,7 @@
                  [uk.ac.cam.ch.opsin/opsin-core "2.3.1"]
                  [cheshire "5.8.0"]
                  ]
-  :main ^:skip-aot isotscope.core
+  :main isotscope.core ;; before :main ^:skip-aot isotscope.core
+  :aot :all ;; aot needed for class compilation in uihelpers
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

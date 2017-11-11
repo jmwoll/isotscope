@@ -15,7 +15,9 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(ns isotscope.ui)
+(ns isotscope.ui
+  (:require [isotscope.uihelpers :refer :all])
+  )
 (import javax.swing.JFrame)
 (import javax.swing.JPanel)
 (import javax.swing.JTextArea)
@@ -23,6 +25,9 @@
 (import java.awt.Color)
 (import java.awt.GridBagLayout)
 (import java.awt.GridBagConstraints)
+;;(import isotscope.uihelpers.DocListener)
+
+
 
 (defn setup-frame [app]
   (let [cont-pane (.getContentPane app) editor (JTextArea. 5 20)
@@ -45,6 +50,15 @@
   (.add cont-pane editor grid1)
   (.setBackground editor edit-col)
   (.setForeground editor Color/WHITE)
+  ;; The uihelpers.DocListener will run
+  ;; the on-update callback on updates to the sum formula
+  ;; text editor.
+  (defn on-update []
+    (println "updating now!")
+
+    )
+  ;; end of the callback for editor updates
+  (.addDocumentListener (.getDocument editor) (isotscope.uihelpers.DocListener. on-update))
   (set! (.gridx grid1) 0)
   (set! (.gridy grid1) 0)
   (.add cont-pane (JLabel. "Sum Formula") grid1)
