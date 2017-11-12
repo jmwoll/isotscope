@@ -68,9 +68,16 @@
     )
   )
 
+(defn to-percentage-sf [sf]
+  (defn above-min-perc [itm] (> (second itm) 0.0))
+  (let [sum-sf (reduce + (map second sf))]
+  (filter above-min-perc (map (fn [itm] [(first itm)
+    ((partial isotscope.isotope/round2 2) (float (/ (second itm) sum-sf)))]) sf)
+  )
+  ))
 
 (defn pretty-print-sf [sf]
   (clojure.string/join "\n"
     (map (fn [itm]
-      (clojure.string/join "\t" [(first itm) (second itm)])) sf))
+      (clojure.string/join "\t" [(first itm) (second itm)])) (sort (to-percentage-sf sf))))
   )

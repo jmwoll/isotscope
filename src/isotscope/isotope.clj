@@ -85,6 +85,6 @@
           (repeatedly #(take-random-isotope-mass (first kv))))) sf))))
 
   (defn rand-isopat-gen [sf num-trials]
-    ;; floating point precision of 6
-    (frequencies (map (partial round2 6)(take num-trials (repeatedly
+    ;; floating point precision of 6 or 2?
+    (frequencies (map (partial round2 2)(take num-trials (repeatedly
       #(rand-isopat-path sf))))))

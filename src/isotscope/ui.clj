@@ -24,10 +24,11 @@
 (import javax.swing.JPanel)
 (import javax.swing.JTextArea)
 (import javax.swing.JLabel)
+(import javax.swing.JScrollPane)
+(import javax.swing.SwingUtilities)
 (import java.awt.Color)
 (import java.awt.GridBagLayout)
 (import java.awt.GridBagConstraints)
-(import javax.swing.SwingUtilities)
 ;;(import isotscope.uihelpers.DocListener)
 
 (def calc-agent (agent {}))
@@ -51,7 +52,7 @@
   (set! (.gridx grid1) 0)
   (set! (.gridy grid1) 1)
   (set! (.fill grid1) GridBagConstraints/BOTH)
-  (.add cont-pane editor grid1)
+  (.add cont-pane (JScrollPane. editor) grid1)
   (.setBackground editor edit-col)
   (.setForeground editor Color/WHITE)
   ;; The uihelpers.DocListener will run
@@ -97,7 +98,8 @@
   (set! (.gridy grid1) 4)
   (.setBackground results-editor edit-col)
   (.setForeground results-editor Color/WHITE)
-  (.add cont-pane results-editor grid1)
+  (.add cont-pane (JScrollPane. results-editor) grid1)
+  ;;(.add cont-pane results-editor grid1)
   ;; Plot panel
   (.setPreferredSize plot-panel (java.awt.Dimension. 400 200))
   (.setBackground plot-panel Color/RED)
