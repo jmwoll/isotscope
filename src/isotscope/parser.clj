@@ -59,3 +59,18 @@
 
 (defn parse-sf-string [sf-str]
   (parse-sf-tokens (to-tokens (tokenize-sf-string sf-str))))
+
+
+(defn add-sf-dicts [d1 d2]
+    (let [hd (first d2)]
+    (if (empty? d2) d1
+      (add-sf-dicts (assoc-or-add d1 (first hd) (second hd)) (rest d2)))
+    )
+  )
+
+
+(defn pretty-print-sf [sf]
+  (clojure.string/join "\n"
+    (map (fn [itm]
+      (clojure.string/join "\t" [(first itm) (second itm)])) sf))
+  )

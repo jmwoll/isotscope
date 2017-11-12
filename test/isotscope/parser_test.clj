@@ -95,3 +95,12 @@
   (let [sf "C10 H10"]
     (is (= {:C 10 :H 10} (parse-sf-string sf)))
     ))
+
+
+(deftest test-add-sf-dicts
+  (testing "add-sf-dicts")
+  (let [d1 {:a 1 :b 2 :c 3}
+        d2 {:a 3 :b 3 :d 3}]
+   (is (= {:a 4 :b 5 :c 3 :d 3} (add-sf-dicts d1 d2)))
+  )
+  )

@@ -31,6 +31,7 @@
 ;;(import isotscope.uihelpers.DocListener)
 
 (def calc-agent (agent {}))
+(def previous-text (agent "nil"))
 
 (defn setup-frame [app]
   (let [cont-pane (.getContentPane app) editor (JTextArea. 5 20)
@@ -72,9 +73,14 @@
     (println "text is " inp)
     (println "dict is " sf-dct)
     ;;(println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
-    (send calc-agent (fn [itm] (isotscope.isotope/rand-isopat-gen sf-dct 1000)))
+    ;;(send calc-agent (fn [itm] (isotscope.isotope/rand-isopat-gen sf-dct 1000)))
+    (let [pt @previous-text]
+      (if (not= pt inp) (send calc-agent (fn [itm] {}))))
+    (send calc-agent (fn [itm] (isotscope.parser/add-sf-dicts itm (isotscope.isotope/rand-isopat-gen sf-dct 1000))))
+    (send previous-text (fn [itm] inp))
     (println "<- editor update ->")
-    (.setText results-editor (str @calc-agent))
+    ;;(.setText results-editor (str @calc-agent))
+    (.setText results-editor (isotscope.parser/pretty-print-sf @calc-agent))
   ))
   (defn update-loop []
     (while true (updater)))
