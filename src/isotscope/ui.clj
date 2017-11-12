@@ -27,9 +27,10 @@
 (import java.awt.Color)
 (import java.awt.GridBagLayout)
 (import java.awt.GridBagConstraints)
+(import javax.swing.SwingUtilities)
 ;;(import isotscope.uihelpers.DocListener)
 
-
+(def calc-agent (agent {}))
 
 (defn setup-frame [app]
   (let [cont-pane (.getContentPane app) editor (JTextArea. 5 20)
@@ -60,9 +61,16 @@
     (let [inp (.getText editor) sf-dct (isotscope.parser/parse-sf-string inp)]
     (println "text is " inp)
     (println "dict is " sf-dct)
-    (println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
+    ;;(println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
+    (send calc-agent (fn [itm] (isotscope.isotope/rand-isopat-gen sf-dct 1000)))
   ))
   ;; end of the callback for editor updates
+  (defn update-loop []
+    (Thread/sleep 500)
+    (println "<- editor update ->")
+    (.setText results-editor (str @calc-agent))
+  )
+  (.start (Thread. #(while true (update-loop))))
   (.addDocumentListener (.getDocument editor) (isotscope.uihelpers.DocListener. on-update))
   (set! (.gridx grid1) 0)
   (set! (.gridy grid1) 0)
@@ -87,9 +95,9 @@
   )
   )
 
-(defn ui-main [] (let [app (JFrame.)]
-                 (setup-frame app)
-                 app))
+(defn ui-main [] (SwingUtilities/invokeAndWait #(let [app (JFrame.)]
+                (setup-frame app)
+                 app)))
 
 
 

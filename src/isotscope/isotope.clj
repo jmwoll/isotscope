@@ -24,7 +24,7 @@
   (import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
 
 
-  (println "HUURAY")
+  (println "running isotope")
 
 
   (defn round2
