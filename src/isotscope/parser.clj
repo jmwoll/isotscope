@@ -16,7 +16,10 @@
 
 (ns isotscope.parser
 (:require [isotscope.isotope])
+(:require [clojure.walk :refer :all])
   )
+
+(import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
 
 ;; C11 H22 O33 -> [C11 H22 O33] -> [[:C 11] [:H 22] [:O 33]]
 ;; -> {:C 11 :H 22 :O 33}
@@ -39,7 +42,7 @@
   (let [symb (symbol-of-token token)]
   (if (contains? (isotscope.isotope/all-isotopes-dict) symb)
     [symb (count-of-token token)]
-    [:Tc 11] ;; for now, handle IUPAC later
+    [:Tc 11] ;; for now, handle IUPAC later -> actually raise error here!
   )))
 
 (defn to-tokens [toks]
@@ -80,4 +83,16 @@
   (clojure.string/join "\n"
     (map (fn [itm]
       (clojure.string/join "\t" [(first itm) (second itm)])) (sort (to-percentage-sf sf))))
+  )
+
+
+
+(defn iupac-name-to-cml [name]
+  (let [nts (NameToStructure/getInstance)] (.parseToCML nts name)))
+
+
+(defn cml-to-sf [cml]
+   (let [elt-lst (re-seq #"elementType=\"([a-zA-Z][a-zA-Z]?)\"" cml)]
+   (clojure.walk/keywordize-keys (frequencies (map (fn [itm] (second itm)) elt-lst)))
+   )
   )

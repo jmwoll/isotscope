@@ -21,7 +21,7 @@
   )
 
   (import java.util.Date)
-  (import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
+  ;;(import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
 
 
   (println "running isotope")
@@ -57,8 +57,8 @@
   (defn isotopes-prob [symbol]
     (isotopes-nth-property symbol 2))
 
-  (defn parseToCML []
-    (let [nts (NameToStructure/getInstance)] (.parseToCML "acetonitrile" nts)))
+  ;;(defn parseToCML []
+  ;;  (let [nts (NameToStructure/getInstance)] (.parseToCML "acetonitrile" nts)))
 
 
 
