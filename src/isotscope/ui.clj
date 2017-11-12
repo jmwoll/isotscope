@@ -57,20 +57,29 @@
   ;; the on-update callback on updates to the sum formula
   ;; text editor.
   (defn on-update []
+    ;;(println "updating now!")
+    ;;(let [inp (.getText editor) sf-dct (isotscope.parser/parse-sf-string inp)]
+    ;;(println "text is " inp)
+    ;;(println "dict is " sf-dct)
+    ;;(println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
+    ;;(send calc-agent (fn [itm] (isotscope.isotope/rand-isopat-gen sf-dct 1000)))
+  )
+  ;; end of the callback for editor updates
+  (defn updater []
+    (Thread/sleep 500)
     (println "updating now!")
     (let [inp (.getText editor) sf-dct (isotscope.parser/parse-sf-string inp)]
     (println "text is " inp)
     (println "dict is " sf-dct)
     ;;(println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
     (send calc-agent (fn [itm] (isotscope.isotope/rand-isopat-gen sf-dct 1000)))
-  ))
-  ;; end of the callback for editor updates
-  (defn update-loop []
-    (Thread/sleep 500)
     (println "<- editor update ->")
     (.setText results-editor (str @calc-agent))
-  )
-  (.start (Thread. #(while true (update-loop))))
+  ))
+  (defn update-loop []
+    (while true (updater)))
+  (.start (Thread. update-loop))
+  (println "----->")
   (.addDocumentListener (.getDocument editor) (isotscope.uihelpers.DocListener. on-update))
   (set! (.gridx grid1) 0)
   (set! (.gridy grid1) 0)
