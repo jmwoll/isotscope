@@ -79,7 +79,7 @@
     (is (= [:H 1] (parse-sf-token sf)))
   )
   (let [sf "methane"]
-    (is (= [:C 1 :H 4] (parse-sf-token sf))) ;; for now
+    (is (= [[:C 1] [:H 4]] (parse-sf-token sf))) ;; for now
   )
 )
 

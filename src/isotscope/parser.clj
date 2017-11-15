@@ -56,8 +56,7 @@
         (if (empty? tl)
           [hd]
           (cons hd (to-pairs tl))
-        )
-        )
+        ))
   ))
 
 (defn parse-sf-token [token]
@@ -65,7 +64,9 @@
   (if (contains? (isotscope.isotope/all-isotopes-dict) symb)
     [symb (count-of-token token)]
     ;;[:Tc 11] ;; for now, handle IUPAC later -> actually raise error here!
-    (seq (cml-to-sf (iupac-name-to-cml token)))
+    (try (seq (cml-to-sf (iupac-name-to-cml token)))
+    (catch Exception e [:NA :NA])
+    )
   )))
 
 (defn to-tokens [toks]
