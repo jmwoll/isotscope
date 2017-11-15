@@ -78,8 +78,8 @@
   (let [sf "H"]
     (is (= [:H 1] (parse-sf-token sf)))
   )
-  (let [sf "hydrochinon"]
-    (is (= [:Tc 11] (parse-sf-token sf))) ;; for now
+  (let [sf "methane"]
+    (is (= [:C 1 :H 4] (parse-sf-token sf))) ;; for now
   )
 )
 

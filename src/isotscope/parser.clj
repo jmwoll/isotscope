@@ -38,16 +38,39 @@
   (if (= 1 (count number)) (Integer. (first number)) 1)
 ))
 
+
+(defn iupac-name-to-cml [name]
+  (let [nts (NameToStructure/getInstance)] (.parseToCML nts name)))
+
+
+(defn cml-to-sf [cml]
+   (let [elt-lst (re-seq #"elementType=\"([a-zA-Z][a-zA-Z]?)\"" cml)]
+   (clojure.walk/keywordize-keys (frequencies (map (fn [itm] (second itm)) elt-lst)))
+   )
+  )
+
+(defn to-pairs [lst]
+  (if (empty? lst) []
+  (let [hd [(first lst) (second lst)]
+        tl (rest (rest lst))]
+        (if (empty? tl)
+          [hd]
+          (cons hd (to-pairs tl))
+        )
+        )
+  ))
+
 (defn parse-sf-token [token]
   (let [symb (symbol-of-token token)]
   (if (contains? (isotscope.isotope/all-isotopes-dict) symb)
     [symb (count-of-token token)]
-    [:Tc 11] ;; for now, handle IUPAC later -> actually raise error here!
+    ;;[:Tc 11] ;; for now, handle IUPAC later -> actually raise error here!
+    (seq (cml-to-sf (iupac-name-to-cml token)))
   )))
 
 (defn to-tokens [toks]
     ;;(map (fn [word] [(symbol-of-token word) (count-of-token word)]) words))
-    (map parse-sf-token toks))
+    (to-pairs (flatten (map parse-sf-token toks))))
 
 (defn assoc-or-add [d k v]
   (if (contains? d k) (assoc d k (+ v (d k))) (assoc d k v)))
@@ -83,16 +106,4 @@
   (clojure.string/join "\n"
     (map (fn [itm]
       (clojure.string/join "\t" [(first itm) (second itm)])) (sort (to-percentage-sf sf))))
-  )
-
-
-
-(defn iupac-name-to-cml [name]
-  (let [nts (NameToStructure/getInstance)] (.parseToCML nts name)))
-
-
-(defn cml-to-sf [cml]
-   (let [elt-lst (re-seq #"elementType=\"([a-zA-Z][a-zA-Z]?)\"" cml)]
-   (clojure.walk/keywordize-keys (frequencies (map (fn [itm] (second itm)) elt-lst)))
-   )
   )
