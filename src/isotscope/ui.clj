@@ -11,6 +11,7 @@
   (:require [isotscope.uihelpers :refer :all])
   (:require [isotscope.parser :refer :all])
   (:require [isotscope.isotope :refer :all])
+  (:require [isotscope.renderpanel :refer :all])
   )
 (import javax.swing.JFrame)
 (import javax.swing.JPanel)
@@ -26,13 +27,16 @@
 (def calc-agent (agent {}))
 (def previous-text (agent "nil"))
 
+;;(def testatom (atom "test"))
+
 (defn setup-frame [app]
   (let [cont-pane (.getContentPane app) editor (JTextArea. 5 20)
         results-editor (JTextArea. 5 20)
         back-col Color/BLACK
         edit-col (Color. 20 20 50)
         grid1 (GridBagConstraints.)
-        plot-panel (JPanel.)
+        plot-panel (isotscope.renderpanel.RenderPanel. calc-agent)
+        ;;plot-panel (JPanel.)
         ]
   (.setSize app 650 300);;750 500
   (.setVisible app true)
@@ -80,6 +84,9 @@
     (println "<- editor update ->")
     ;;(.setText results-editor (str @calc-agent))
     (.setText results-editor (isotscope.parser/pretty-print-sf @calc-agent))
+
+    ;; also update plot-panel
+    (.repaint plot-panel)
   ))
   (defn update-loop []
     (while true (updater)))
@@ -97,7 +104,7 @@
   (.setBackground results-editor edit-col)
   (.setForeground results-editor Color/WHITE)
   (.add cont-pane (JScrollPane. results-editor) grid1)
-  ;;(.add cont-pane results-editor grid1)
+
   ;; Plot panel
   (.setPreferredSize plot-panel (java.awt.Dimension. 400 200))
   (.setBackground plot-panel Color/RED)

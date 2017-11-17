@@ -6,7 +6,6 @@
 ;;
 ;; SPDX-License-Identifier: EPL-2.0
 
-
 (ns isotscope.uihelpers
   (:gen-class
     ;; :name com.isot.DocListener
@@ -41,19 +40,3 @@
   ;;(println "handler" on-update)
   [[] on-update]
   )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;;
