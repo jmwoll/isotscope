@@ -59,7 +59,8 @@
         peak-col (Color. 80 180 80)
         peak-strk (java.awt.BasicStroke. 2.5 java.awt.BasicStroke/CAP_ROUND
                 java.awt.BasicStroke/JOIN_MITER)
-        ypad 20 xpad 20
+        ypad 22 xpad 20
+        xplotpad 10
         data (get-data this)
         ]
         (.setColor g bg)
@@ -84,7 +85,13 @@
             (.setStroke g peak-strk)
             (.setColor g peak-col)
             (dorun (map (fn [xy] (let [x (first xy) y (second xy)]
-                           (draw-line this g x 0 x y)
+                            (assert (< 0 y))
+                           (let [x (/ (+ x xpad) (/ (+ (width this) (* 2 xpad)) (width this)))
+                                 y (+ ypad (/ y (/ (+ (height this) (* 1 ypad)) (height this))))
+                           ]
+                             (assert (<= ypad y))
+                             (draw-line this g x ypad x y)
+                           )
                            )) data-screen))
             ;;(dorun (map (fn [itm] (println "itm")) data-screen))
             )
