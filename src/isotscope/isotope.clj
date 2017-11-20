@@ -27,7 +27,8 @@
 
 
   (defn all-isotopes-str []
-    (slurp (.getPath (clojure.java.io/resource "all_isotopes.json"))))
+    ;;(slurp (.getPath (clojure.java.io/resource "all_isotopes.json"))))
+    (slurp (clojure.java.io/resource "all_isotopes.json")))
 
   (defn compute-all-isotopes-dict []
       (clojure.walk/keywordize-keys (cheshire.core/parse-string (all-isotopes-str))))
@@ -77,6 +78,7 @@
           (repeatedly #(take-random-isotope-mass (first kv))))) sf))))
 
   (defn rand-isopat-gen [sf num-trials]
+    (if (empty? (all-isotopes-dict)) (println "RESOURCE NOT FOUND!!!!") (println "RESOURCES FOUND!!!!"))
     ;; floating point precision of 6 or 2?
     (frequencies (map (partial round2 1)(take num-trials (repeatedly
       #(rand-isopat-path sf))))))
