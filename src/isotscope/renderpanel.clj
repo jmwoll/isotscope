@@ -73,7 +73,7 @@
         ;; therefore xpad + (width - 2*xpad) * (x - min) / (max - min)
         ;;(defn y-norm [y ymin ymax] (float (+ ypad (* (- (height this) (* 2 ypad)) (/ (- y ymin) (- ymax ymin))))))
         (defn y-norm [y ymin ymax] (float (* (/ y ymax) (height this))))
-        (defn x-norm [x dmin dmax] (float (+ xpad (* (- (width this) (* 2 xpad)) (/ (- x dmin) (- dmax dmin))))))
+        (defn x-norm [x dmin dmax] (float (+ xpad (* (- (width this) (* 2 xpad)) (/ (- x dmin) (max 1 (- dmax dmin)))))))
         (println "~")
         (when (not (empty? (filter (fn [x] (not (zero? x))) (keys data))))
           (let [dmin (apply min (keys data)) dmax (apply max (keys data))
