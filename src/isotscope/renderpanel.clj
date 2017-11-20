@@ -103,16 +103,20 @@
             (println data-screen)
             (.setStroke g peak-strk)
             (.setColor g peak-col)
-            (dorun (map (fn [xy] (let [x (first xy) y (second xy) orgx x]
+            (dorun (map (fn [itm] (let [xy (first itm) orgxy (second itm) x (first xy) y (second xy)]
                             (assert (< 0 y))
                            (let [x (/ (+ x xpad) (/ (+ (width this) (* 2 xpad)) (width this)))
                                  y (+ ypad (/ y (/ (+ (height this) (* 1 ypad)) (height this))))
                            ]
                              (assert (<= ypad y))
                              (draw-line this g x ypad x y)
-                             (centered-string this g (str orgx) x 0)
+                             ;; only mz i.e. (first orgxy) or also intensity
+                             ;; aka (second orgxy) ??
+                             (when (> 10 (count data))
+                                (centered-string this g (str (first orgxy)) x 0)
+                             )
                            )
-                           )) data-screen))
+                           )) (partition 2 (interleave data-screen data))))
             ;;(dorun (map (fn [itm] (println "itm")) data-screen))
             )
         )
