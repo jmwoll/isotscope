@@ -1,32 +1,16 @@
 # isotscope
 
-FIXME: description
+Isotscope is a simple prototype of a IUPAC aware isotopic pattern calculator build upon the wonderful OPSIN (Open Parser for Systematic IUPAC Nomenclature) library (see http://opsin.ch.cam.ac.uk/ and J. Chem. Inf. Model., 2011, 51 (3), pp 739–753).
 
 ## Installation
 
-Download from http://example.com/FIXME.
+The .jar files with and without dependencies can be found under /jars.
 
 ## Usage
 
 FIXME: explanation
 
-    $ java -jar isotscope-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+    $ java -jar isotscope-0.1.0-standalone.jar
 
 ## License
 
