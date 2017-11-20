@@ -49,6 +49,25 @@
   )
 
 
+(defn draw-string [this g text x y]
+  (.drawString g text (int x) (- (height this) (int y)))
+  )
+
+
+(defn centered-string [this g text x y]
+  (let [font (.getFont (javax.swing.JLabel.))
+        fm (.getFontMetrics g)
+        strw (javax.swing.SwingUtilities/computeStringWidth fm text)
+    ]
+      (draw-string this g text (- x (/ strw 2)) y)
+      )
+      ;;(let [metrics (.getFontMetrics g (.getFont g))]
+          ;;(.drawString g text (- x (.stringWidth metrics text)) y)
+        ;;(.drawString g text x (- (height this) y))
+      ;;)
+  )
+
+
 (defn -paintComponent [this g]
   (println "painting component. State:\n")
   (let [state (.state this)
@@ -84,13 +103,14 @@
             (println data-screen)
             (.setStroke g peak-strk)
             (.setColor g peak-col)
-            (dorun (map (fn [xy] (let [x (first xy) y (second xy)]
+            (dorun (map (fn [xy] (let [x (first xy) y (second xy) orgx x]
                             (assert (< 0 y))
                            (let [x (/ (+ x xpad) (/ (+ (width this) (* 2 xpad)) (width this)))
                                  y (+ ypad (/ y (/ (+ (height this) (* 1 ypad)) (height this))))
                            ]
                              (assert (<= ypad y))
                              (draw-line this g x ypad x y)
+                             (centered-string this g (str orgx) x 0)
                            )
                            )) data-screen))
             ;;(dorun (map (fn [itm] (println "itm")) data-screen))
