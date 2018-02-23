@@ -30,9 +30,10 @@
   (defn compute-all-isotopes-dict []
       (clojure.walk/keywordize-keys (cheshire.core/parse-string (all-isotopes-str))))
 
-  (def all-isotopes-dict (memoize compute-all-isotopes-dict))
 
-  (def all-isotopes-dict-with-charges (assoc (assoc (all-isotopes-dict) "+" nil) "-" nil))
+
+  (def all-isotopes-dict-no-charges (memoize compute-all-isotopes-dict))
+  (defn all-isotopes-dict [] (assoc (assoc (all-isotopes-dict-no-charges) (keyword "+") nil) (keyword "-") nil))
 
   (defn isotopes-of [symbol]
     (get (get (all-isotopes-dict) symbol) :isotopes))

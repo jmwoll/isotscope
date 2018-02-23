@@ -80,6 +80,12 @@
         ypad 22 xpad 20
         xplotpad 10
         data (get-data this)
+        pos-key (keyword "+")
+        neg-key (keyword "-")
+        _ (println "----->>")
+        pos-charge (get data pos-key)
+        neg-charge (get data neg-key)
+        data (dissoc (dissoc data pos-key) neg-key)
         ]
         (println "----->>")
         (println data)
