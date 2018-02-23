@@ -16,8 +16,5 @@
 
 ;;(isotscope.ui/ui-main) ???
 (defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!")
-  (isotscope.ui/ui-main)
-  (println "done."))
+  "Isotscope --- a IUPAC aware isotopic pattern generator"
+  [& args] (isotscope.ui/ui-main))
