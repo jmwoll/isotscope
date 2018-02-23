@@ -1,4 +1,4 @@
-;; Copyright (c) 2017 Jan Wollschläger
+;; Copyright (c) 2018 Jan Wollschläger
 ;;
 ;; This program and the accompanying materials are made
 ;; available under the terms of the Eclipse Public License 2.0
@@ -77,10 +77,8 @@
         (assoc-or-add (parse-sf-tokens tl) (first hd) (second hd))
     )))
 
-
 (defn parse-sf-string [sf-str]
   (parse-sf-tokens (to-tokens (tokenize-sf-string sf-str))))
-
 
 (defn add-sf-dicts [d1 d2]
     (let [hd (first d2)]

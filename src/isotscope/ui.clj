@@ -1,4 +1,4 @@
-;; Copyright (c) 2017 Jan Wollschläger
+;; Copyright (c) 2018 Jan Wollschläger
 ;;
 ;; This program and the accompanying materials are made
 ;; available under the terms of the Eclipse Public License 2.0
@@ -87,7 +87,6 @@
   (defn update-loop []
     (while true (updater)))
   (.start (Thread. update-loop))
-  (println "----->")
   (.addDocumentListener (.getDocument editor) (isotscope.uihelpers.DocListener. on-update))
   (set! (.gridx grid1) 0)
   (set! (.gridy grid1) 0)

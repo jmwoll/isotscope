@@ -1,4 +1,4 @@
-;; Copyright (c) 2017 Jan Wollschläger
+;; Copyright (c) 2018 Jan Wollschläger
 ;;
 ;; This program and the accompanying materials are made
 ;; available under the terms of the Eclipse Public License 2.0
@@ -31,6 +31,8 @@
       (clojure.walk/keywordize-keys (cheshire.core/parse-string (all-isotopes-str))))
 
   (def all-isotopes-dict (memoize compute-all-isotopes-dict))
+
+  (def all-isotopes-dict-with-charges (assoc (assoc (all-isotopes-dict) "+" nil) "-" nil))
 
   (defn isotopes-of [symbol]
     (get (get (all-isotopes-dict) symbol) :isotopes))

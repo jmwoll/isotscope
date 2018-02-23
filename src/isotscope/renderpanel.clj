@@ -1,4 +1,4 @@
-;; Copyright (c) 2017 Jan Wollschläger
+;; Copyright (c) 2018 Jan Wollschläger
 ;;
 ;; This program and the accompanying materials are made
 ;; available under the terms of the Eclipse Public License 2.0
@@ -81,6 +81,8 @@
         xplotpad 10
         data (get-data this)
         ]
+        (println "----->>")
+        (println data)
         (.setColor g bg)
         (fill-background this g)
         (.setColor g fg)
