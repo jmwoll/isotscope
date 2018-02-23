@@ -15,6 +15,5 @@
   )
 
 ;;(isotscope.ui/ui-main) ???
-(defn -main
-  "Isotscope --- a IUPAC aware isotopic pattern generator"
+(defn -main "Isotscope --- a IUPAC aware isotopic pattern generator"
   [& args] (isotscope.ui/ui-main))

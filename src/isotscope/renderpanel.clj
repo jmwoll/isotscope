@@ -69,7 +69,6 @@
 
 
 (defn -paintComponent [this g]
-  (println "painting component. State:\n")
   (let [state (.state this)
         fg (Color. 180 180 220)
         bg (Color. 0 0 0)
@@ -84,7 +83,6 @@
         ]
         (.setColor g bg)
         (fill-background this g)
-        (println @state)
         (.setColor g fg)
         (.setStroke g b-strk)
         (draw-line this g xpad ypad (- (width this) xpad) ypad)
@@ -93,14 +91,13 @@
         ;;(defn y-norm [y ymin ymax] (float (+ ypad (* (- (height this) (* 2 ypad)) (/ (- y ymin) (- ymax ymin))))))
         (defn y-norm [y ymin ymax] (float (* (/ y ymax) (height this))))
         (defn x-norm [x dmin dmax] (float (+ xpad (* (- (width this) (* 2 xpad)) (/ (- x dmin) (max 1 (- dmax dmin)))))))
-        (println "~")
         (when (not (empty? (filter (fn [x] (not (zero? x))) (keys data))))
           (let [dmin (apply min (keys data)) dmax (apply max (keys data))
                 ymin (apply min (vals data)) ymax (apply max (vals data))
                 data-screen (map (fn [xy] [(x-norm (first xy) dmin dmax)
                                            (y-norm (second xy) ymin ymax)]) data)
                ]
-            (println data-screen)
+            ;;(println data-screen)
             (.setStroke g peak-strk)
             (.setColor g peak-col)
             (dorun (map (fn [itm] (let [xy (first itm) orgxy (second itm) x (first xy) y (second xy)]
@@ -120,6 +117,5 @@
             ;;(dorun (map (fn [itm] (println "itm")) data-screen))
             )
         )
-        (println "~")
     )
   )

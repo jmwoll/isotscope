@@ -9,14 +9,11 @@
 (ns isotscope.isotope
   (:gen-class)
   (:require [clojure.walk :refer :all])
-  (:require [cheshire.core :refer :all])
-  )
+  (:require [cheshire.core :refer :all]))
 
   (import java.util.Date)
   ;;(import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
 
-
-  (println "running isotope")
 
 
   (defn round2
@@ -53,8 +50,6 @@
   ;;(defn parseToCML []
   ;;  (let [nts (NameToStructure/getInstance)] (.parseToCML "acetonitrile" nts)))
 
-
-
   ;; section for random isopat generation
   (defn rand-choice [slices]
     (let [total (reduce + slices)
@@ -78,7 +73,7 @@
           (repeatedly #(take-random-isotope-mass (first kv))))) sf))))
 
   (defn rand-isopat-gen [sf num-trials]
-    (if (empty? (all-isotopes-dict)) (println "RESOURCE NOT FOUND!!!!") (println "RESOURCES FOUND!!!!"))
+    (if (empty? (all-isotopes-dict)) (println "RESOURCE NOT FOUND IN JAR. This is an indication of an unsuccessful installation!"))
     ;; floating point precision of 6 or 2?
     (frequencies (map (partial round2 1)(take num-trials (repeatedly
       #(rand-isopat-path sf))))))

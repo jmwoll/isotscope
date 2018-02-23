@@ -13,22 +13,26 @@
 
 (import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
 
-;; C11 H22 O33 -> [C11 H22 O33] -> [[:C 11] [:H 22] [:O 33]]
-;; -> {:C 11 :H 22 :O 33}
+;; The task of the parser is to transform the
+;; input string from a raw input containing
+;; both iupac and sum formula declarations into a list
+;; of lists of the type [[symbol-of-atom count-of-atom]]:
+;;  C11 H22 O33 -> [C11 H22 O33] -> [[:C 11] [:H 22] [:O 33]]
+;;  -> {:C 11 :H 22 :O 33}
+;;
 
+
+;; Tokens are *white-space separated* words.
 (defn tokenize-sf-string [sf]
-  (filter not-empty (clojure.string/split sf #"\s+"))
-  )
+  (filter not-empty (clojure.string/split sf #"\s+")))
 
 
 (defn symbol-of-token [tok]
-  (keyword (first (filter not-empty (clojure.string/split tok #"\d"))))
-)
+  (keyword (first (filter not-empty (clojure.string/split tok #"\d")))))
 
 (defn count-of-token [tok]
   (let [number (filter not-empty (clojure.string/split tok #"\D"))]
-  (if (= 1 (count number)) (Integer. (first number)) 1)
-))
+  (if (= 1 (count number)) (Integer. (first number)) 1)))
 
 
 (defn iupac-name-to-cml [name]
@@ -37,9 +41,7 @@
 
 (defn cml-to-sf [cml]
    (let [elt-lst (re-seq #"elementType=\"([a-zA-Z][a-zA-Z]?)\"" cml)]
-   (clojure.walk/keywordize-keys (frequencies (map (fn [itm] (second itm)) elt-lst)))
-   )
-  )
+   (clojure.walk/keywordize-keys (frequencies (map (fn [itm] (second itm)) elt-lst)))))
 
 (defn to-pairs [lst]
   (if (empty? lst) []

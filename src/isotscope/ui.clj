@@ -65,11 +65,8 @@
   ;; end of the callback for editor updates
   (defn updater []
     (Thread/sleep 500)
-    (println "updating now!")
     (let [inp (.getText editor)
           sf-dct (try (isotscope.parser/parse-sf-string inp) (catch Exception e {}))]
-    (println "text is " inp)
-    (println "dict is " sf-dct)
     ;;(println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
     ;;(send calc-agent (fn [itm] (isotscope.isotope/rand-isopat-gen sf-dct 1000)))
     (let [pt @previous-text]
@@ -81,7 +78,6 @@
         (catch Exception e itm)
         ))))
     (send previous-text (fn [itm] inp))
-    (println "<- editor update ->")
     ;;(.setText results-editor (str @calc-agent))
     (.setText results-editor (isotscope.parser/pretty-print-sf @calc-agent))
 
