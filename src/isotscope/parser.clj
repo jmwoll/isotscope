@@ -51,7 +51,7 @@
 
 ;; e.g. 1 => {:+ 1, :- 0}
 (defn to-charge-dict [charge]
-    {:+ (if (< charge 0) 0 charge) :- (if (> charge 0) 0 charge)}
+    {:+ (if (< charge 0) 0 charge) :- (if (> charge 0) 0 (- charge))}
   )
 
 (defn cml-to-charge [cml]

@@ -6,7 +6,7 @@
 ;;
 ;; SPDX-License-Identifier: EPL-2.0
 
-(defproject isotscope "0.1.0-SNAPSHOT"
+(defproject isotscope "0.1.1-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "EPL-2.0"}

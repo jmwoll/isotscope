@@ -86,6 +86,8 @@
         data (get-data this)
         charge (get-charge this)
         charge (if (= charge 0) 1 charge)
+        _ (println "net charge" charge)
+        charge (max charge (- charge))
         data (into (sorted-map) (map (fn [[k v]] [(/ k charge) v]) data))
         ]
 
