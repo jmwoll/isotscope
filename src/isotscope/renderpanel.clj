@@ -23,16 +23,11 @@
 (import java.awt.geom.Line2D)
 
 (defn -init [state]
-  (println "constructing renderpanel")
   [[] (atom state)]
   )
 
 (defn get-data [this]
   (let [state (.state this)]
-  ;;(println "*1" state)
-  ;;(println "*2" (deref state))
-  ;;(println "*3" (get (deref state) :calc))
-  ;;(println "*4" (deref (get (deref state) :calc)))
   (deref (get (deref state) :calc))
   ))
 
@@ -89,17 +84,9 @@
         ypad 22 xpad 20
         xplotpad 10
         data (get-data this)
-        ;;pos-key (keyword "+")
-        ;;neg-key (keyword "-")
-        _ (println "----->>")
-        _ (println data)
-        _ (println "after applying charge ----->>")
         charge (get-charge this)
         charge (if (= charge 0) 1 charge)
         data (into (sorted-map) (map (fn [[k v]] [(/ k charge) v]) data))
-        ;;pos-charge (get data pos-key)
-        ;;neg-charge (get data neg-key)
-        ;;data (dissoc (dissoc data pos-key) neg-key)
         ]
 
         (.setColor g bg)
@@ -118,7 +105,6 @@
                 data-screen (map (fn [xy] [(x-norm (first xy) dmin dmax)
                                            (y-norm (second xy) ymin ymax)]) data)
                ]
-            ;;(println data-screen)
             (.setStroke g peak-strk)
             (.setColor g peak-col)
             (dorun (map (fn [itm] (let [xy (first itm) orgxy (second itm) x (first xy) y (second xy)]

@@ -57,29 +57,16 @@
     (Thread/sleep 500)
     (let [inp (.getText editor)
           sf-dct (try (isotscope.parser/parse-sf-string inp) (catch Exception e {}))
-          _ (println "sf-dict input::")
-          _ (println sf-dct)
           ;;pos-key (keyword "+") neg-key (keyword "-")
           pos-charge (get sf-dct :+) neg-charge (get sf-dct :-)
           pos-charge (if (= pos-charge nil) 0 pos-charge)
           neg-charge (if (= neg-charge nil) 0 neg-charge)
-          _ (if (string? neg-charge) (println "string!!!!!!!!!!!!!!!!!!!!!!!"))
-          ;; some weird problem with charges:
-          ;;pos-charge (Integer. pos-charge)
-          ;;neg-charge (if (string? neg-charge) (Integer. neg-charge) neg-charge)
-          ;;cml-charge 
           total-charge (- pos-charge neg-charge)
           sf-dct (dissoc (dissoc sf-dct :+) :-)
             ]
 
     ;; -- handle charges
-
-    (println "pos charge" pos-charge)
-    (println "neg charge" neg-charge)
-    (println "~~ total charge" total-charge)
-    (println @calc-agent)
     (send charge-agent (fn [itm] total-charge))
-    ;; -- end of handling charges
     ;;(println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
     ;;(send calc-agent (fn [itm] (isotscope.isotope/rand-isopat-gen sf-dct 1000)))
     (let [pt @previous-text]
@@ -123,7 +110,6 @@
   (.setBackground results-editor edit-col)
   (.setForeground results-editor Color/WHITE)
   (.add cont-pane (JScrollPane. results-editor) grid1)
-
   ;; Plot panel
   (.setPreferredSize plot-panel (java.awt.Dimension. 400 200))
   (.setBackground plot-panel Color/RED)

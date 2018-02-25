@@ -36,7 +36,5 @@
   )
 
 (defn -constructor [on-update]
-  (println "constructing class")
-  ;;(println "handler" on-update)
   [[] on-update]
   )

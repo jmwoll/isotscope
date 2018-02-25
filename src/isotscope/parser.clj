@@ -55,10 +55,8 @@
   )
 
 (defn cml-to-charge [cml]
-  ;; (\-?[0-9][0-9]?)
-  (println "------------------------------------------------")
+  ;; allowing a maximum charge of +-99 seems reasonable
   (let [elt-lst (re-seq #"formalCharge=\"(\-?[0-9][0-9]?)\"" cml)]
-  (println "§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
   (reduce (fn [a b] (+ a (Integer. (second b)))) 0 elt-lst)
   )
   )
@@ -66,9 +64,7 @@
 (defn cml-to-sf [cml]
    (let [elt-lst (re-seq #"elementType=\"([a-zA-Z][a-zA-Z]?)\"" cml)
          sf (clojure.walk/keywordize-keys (frequencies (map (fn [itm] (second itm)) elt-lst)))
-         _ (println "#################################################")
          charge (cml-to-charge cml)
-         _ (println "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
          charge-dct (to-charge-dict charge)
          ]
          (add-sf-dicts sf charge-dct)
@@ -127,9 +123,7 @@
   ))
 
 (defn pretty-print-sf [sf]
-  (println "*** " sf)
   (let [sf (dissoc (dissoc sf (keyword "+")) (keyword "-"))]
-    (println "*** " sf)
     (clojure.string/join "\n"
       (map (fn [itm]
         (clojure.string/join "\t" [(first itm) (second itm)])) (sort (to-percentage-sf sf))))
