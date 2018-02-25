@@ -38,7 +38,7 @@
 
 (defn get-charge [this]
   (let [state (.state this)]
-  ((deref @state) :charge)
+  (deref (get (deref state) :charge))
   ))
 
 (defn height [this]
@@ -92,12 +92,16 @@
         ;;pos-key (keyword "+")
         ;;neg-key (keyword "-")
         _ (println "----->>")
+        _ (println data)
+        _ (println "after applying charge ----->>")
+        charge (get-charge this)
+        charge (if (= charge 0) 1 charge)
+        data (into (sorted-map) (map (fn [[k v]] [(/ k charge) v]) data))
         ;;pos-charge (get data pos-key)
         ;;neg-charge (get data neg-key)
         ;;data (dissoc (dissoc data pos-key) neg-key)
         ]
-        (println "----->>")
-        (println data)
+
         (.setColor g bg)
         (fill-background this g)
         (.setColor g fg)
