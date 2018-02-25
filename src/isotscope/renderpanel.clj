@@ -29,7 +29,16 @@
 
 (defn get-data [this]
   (let [state (.state this)]
-  (deref @state)
+  ;;(println "*1" state)
+  ;;(println "*2" (deref state))
+  ;;(println "*3" (get (deref state) :calc))
+  ;;(println "*4" (deref (get (deref state) :calc)))
+  (deref (get (deref state) :calc))
+  ))
+
+(defn get-charge [this]
+  (let [state (.state this)]
+  ((deref @state) :charge)
   ))
 
 (defn height [this]
@@ -80,12 +89,12 @@
         ypad 22 xpad 20
         xplotpad 10
         data (get-data this)
-        pos-key (keyword "+")
-        neg-key (keyword "-")
+        ;;pos-key (keyword "+")
+        ;;neg-key (keyword "-")
         _ (println "----->>")
-        pos-charge (get data pos-key)
-        neg-charge (get data neg-key)
-        data (dissoc (dissoc data pos-key) neg-key)
+        ;;pos-charge (get data pos-key)
+        ;;neg-charge (get data neg-key)
+        ;;data (dissoc (dissoc data pos-key) neg-key)
         ]
         (println "----->>")
         (println data)

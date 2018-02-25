@@ -26,6 +26,7 @@
 
 (def calc-agent (agent {}))
 (def previous-text (agent "nil"))
+(def charge-agent (agent 1))
 
 ;;(def testatom (atom "test"))
 
@@ -35,7 +36,7 @@
         back-col Color/BLACK
         edit-col (Color. 20 20 50)
         grid1 (GridBagConstraints.)
-        plot-panel (isotscope.renderpanel.RenderPanel. calc-agent)
+        plot-panel (isotscope.renderpanel.RenderPanel. {:calc calc-agent :charge charge-agent})
         ;;plot-panel (JPanel.)
         ]
   (.setSize app 650 300);;750 500
@@ -51,30 +52,33 @@
   (.add cont-pane (JScrollPane. editor) grid1)
   (.setBackground editor edit-col)
   (.setForeground editor Color/WHITE)
-  ;; The uihelpers.DocListener will run
-  ;; the on-update callback on updates to the sum formula
-  ;; text editor.
-  (defn on-update []
-    ;;(println "updating now!")
-    ;;(let [inp (.getText editor) sf-dct (isotscope.parser/parse-sf-string inp)]
-    ;;(println "text is " inp)
-    ;;(println "dict is " sf-dct)
-    ;;(println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
-    ;;(send calc-agent (fn [itm] (isotscope.isotope/rand-isopat-gen sf-dct 1000)))
-  )
-  ;; end of the callback for editor updates
-  ;;
+
   (defn updater []
     (Thread/sleep 500)
     (let [inp (.getText editor)
           sf-dct (try (isotscope.parser/parse-sf-string inp) (catch Exception e {}))
-          pos-key (keyword "+") neg-key (keyword "-")
-          pos-charge (get sf-dct pos-key) neg-charge (get sf-dct neg-key)
-          sf-dct (dissoc (dissoc sf-dct pos-key) neg-key)
+          _ (println "sf-dict input::")
+          _ (println sf-dct)
+          ;;pos-key (keyword "+") neg-key (keyword "-")
+          pos-charge (get sf-dct :+) neg-charge (get sf-dct :-)
+          pos-charge (if (= pos-charge nil) 0 pos-charge)
+          neg-charge (if (= neg-charge nil) 0 neg-charge)
+          _ (if (string? neg-charge) (println "string!!!!!!!!!!!!!!!!!!!!!!!"))
+          ;; some weird problem with charges:
+          ;;pos-charge (Integer. pos-charge)
+          ;;neg-charge (if (string? neg-charge) (Integer. neg-charge) neg-charge)
+          total-charge (- pos-charge neg-charge)
+          sf-dct (dissoc (dissoc sf-dct :+) :-)
             ]
+
+    ;; -- handle charges
+
     (println "pos charge" pos-charge)
     (println "neg charge" neg-charge)
-    (println "~~pos charge" (get sf-dct pos-key))
+    (println "~~ total charge" total-charge)
+    (println @calc-agent)
+    (send charge-agent (fn [itm] total-charge))
+    ;; -- end of handling charges
     ;;(println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
     ;;(send calc-agent (fn [itm] (isotscope.isotope/rand-isopat-gen sf-dct 1000)))
     (let [pt @previous-text]
@@ -83,16 +87,20 @@
     (send calc-agent
       (fn [itm] (isotscope.parser/add-sf-dicts itm
         ;; old code: (isotscope.isotope/rand-isopat-gen sf-dct 1000)
+        ;; the following code does not seem to work
+        ;; (assoc (assoc (isotscope.isotope/rand-isopat-gen sf-dct 1000) pos-key pos-charge) neg-key neg-charge)
         ;; TODO: the new code does not work because of the following problem:
         ;; the results-editor will also access the current isopat data. Therefore,
         ;; the function results-editor also needs to be able to handle the
         ;; charge entries for "+" and "-".
-        (try (isotscope.isotope/rand-isopat-gen sf-dct 1000) ;;(assoc (assoc (isotscope.isotope/rand-isopat-gen sf-dct 1000) pos-key pos-charge) neg-key neg-charge)
+        (try (isotscope.isotope/rand-isopat-gen sf-dct 1000)
         (catch Exception e itm)
         ))))
     (send previous-text (fn [itm] inp))
-    ;;(.setText results-editor (str @calc-agent))
-    (.setText results-editor (isotscope.parser/pretty-print-sf @calc-agent))
+    ;; this old code works, but will not work after adding
+    ;; the :charge attribute to the state of the render-panel
+    ;; (.setText results-editor (isotscope.parser/pretty-print-sf @calc-agent))
+    (.setText results-editor (isotscope.parser/pretty-print-sf (get-data plot-panel)))
 
     ;; also update plot-panel
     (.repaint plot-panel)
@@ -102,7 +110,7 @@
     (while true (updater)))
   ;;
   (.start (Thread. update-loop))
-  (.addDocumentListener (.getDocument editor) (isotscope.uihelpers.DocListener. on-update))
+  ;;(.addDocumentListener (.getDocument editor) (isotscope.uihelpers.DocListener. on-update))
   (set! (.gridx grid1) 0)
   (set! (.gridy grid1) 0)
   (.add cont-pane (JLabel. "Sum Formula") grid1)

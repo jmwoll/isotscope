@@ -9,6 +9,7 @@
 (ns isotscope.parser
 (:require [isotscope.isotope])
 (:require [clojure.walk :refer :all])
+(:require [clojure.string :as cljstr])
   )
 
 (import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
@@ -54,13 +55,16 @@
   ))
 
 (defn parse-sf-token [token]
+  (defn token-charge-count [tok] (if (cljstr/blank? tok) 1 (Integer. tok)))
   (let [symb (symbol-of-token token)]
-  (if (contains? (isotscope.isotope/all-isotopes-dict) symb)
-    [symb (count-of-token token)]
-    ;;[:Tc 11] ;; for now, handle IUPAC later -> actually raise error here!
-    (try (seq (cml-to-sf (iupac-name-to-cml token)))
-    (catch Exception e [:NA :NA])
-    )
+  (if (or (= symb (keyword "+")) (= symb (keyword "-"))) [symb (token-charge-count (subs token 1))]
+    ;; else, if it is not a charge token:
+    (if (contains? (isotscope.isotope/all-isotopes-dict) symb)
+      [symb (count-of-token token)]
+      ;;[:Tc 11] ;; for now, handle IUPAC later -> actually raise error here!
+      (try (seq (cml-to-sf (iupac-name-to-cml token)))
+      (catch Exception e [:NA :NA]))
+    );; inner if
   )))
 
 (defn to-tokens [toks]
@@ -96,7 +100,10 @@
   ))
 
 (defn pretty-print-sf [sf]
-  (clojure.string/join "\n"
-    (map (fn [itm]
-      (clojure.string/join "\t" [(first itm) (second itm)])) (sort (to-percentage-sf sf))))
-  )
+  (println "*** " sf)
+  (let [sf (dissoc (dissoc sf (keyword "+")) (keyword "-"))]
+    (println "*** " sf)
+    (clojure.string/join "\n"
+      (map (fn [itm]
+        (clojure.string/join "\t" [(first itm) (second itm)])) (sort (to-percentage-sf sf))))
+  ))
