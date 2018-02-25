@@ -16,13 +16,13 @@ The .jar files with and without dependencies can be found under /jars.
 Assuming java is installed on your system, just run the standalone .jar file
 from the command line:
 
-    $ java -jar isotscope-0.1.0-standalone.jar
+    $ java -jar isotscope-0.1.1-standalone.jar
 
 
 which opens the application in a new window.
 
 ## License
 
-Copyright © 2017 Jan Wollschläger
+Copyright © 2018 Jan Wollschläger
 
 Distributed under the Eclipse Public License 2.0.
