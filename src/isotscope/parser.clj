@@ -35,14 +35,47 @@
   (let [number (filter not-empty (clojure.string/split tok #"\D"))]
   (if (= 1 (count number)) (Integer. (first number)) 1)))
 
+(defn assoc-or-add [d k v]
+    (if (contains? d k) (assoc d k (+ v (d k))) (assoc d k v)))
+
+(defn add-sf-dicts [d1 d2]
+    (let [hd (first d2)]
+    (if (empty? d2) d1
+      (add-sf-dicts (assoc-or-add d1 (first hd) (second hd)) (rest d2)))
+    )
+  )
+
 
 (defn iupac-name-to-cml [name]
   (let [nts (NameToStructure/getInstance)] (.parseToCML nts name)))
 
+;; e.g. 1 => {:+ 1, :- 0}
+(defn to-charge-dict [charge]
+    {:+ (if (< charge 0) 0 charge) :- (if (> charge 0) 0 charge)}
+  )
+
+(defn cml-to-charge [cml]
+  ;; (\-?[0-9][0-9]?)
+  (println "------------------------------------------------")
+  (let [elt-lst (re-seq #"formalCharge=\"(\-?[0-9][0-9]?)\"" cml)]
+  (println "§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
+  (reduce (fn [a b] (+ a (Integer. (second b)))) 0 elt-lst)
+  )
+  )
 
 (defn cml-to-sf [cml]
-   (let [elt-lst (re-seq #"elementType=\"([a-zA-Z][a-zA-Z]?)\"" cml)]
-   (clojure.walk/keywordize-keys (frequencies (map (fn [itm] (second itm)) elt-lst)))))
+   (let [elt-lst (re-seq #"elementType=\"([a-zA-Z][a-zA-Z]?)\"" cml)
+         sf (clojure.walk/keywordize-keys (frequencies (map (fn [itm] (second itm)) elt-lst)))
+         _ (println "#################################################")
+         charge (cml-to-charge cml)
+         _ (println "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+         charge-dct (to-charge-dict charge)
+         ]
+         (add-sf-dicts sf charge-dct)
+         )
+)
+
+
 
 (defn to-pairs [lst]
   (if (empty? lst) []
@@ -71,8 +104,7 @@
     ;;(map (fn [word] [(symbol-of-token word) (count-of-token word)]) words))
     (to-pairs (flatten (map parse-sf-token toks))))
 
-(defn assoc-or-add [d k v]
-  (if (contains? d k) (assoc d k (+ v (d k))) (assoc d k v)))
+
 
 (defn parse-sf-tokens [tokens]
   (if (empty? tokens) {}
@@ -84,12 +116,7 @@
 (defn parse-sf-string [sf-str]
   (parse-sf-tokens (to-tokens (tokenize-sf-string sf-str))))
 
-(defn add-sf-dicts [d1 d2]
-    (let [hd (first d2)]
-    (if (empty? d2) d1
-      (add-sf-dicts (assoc-or-add d1 (first hd) (second hd)) (rest d2)))
-    )
-  )
+
 
 (defn to-percentage-sf [sf]
   (defn above-min-perc [itm] (> (second itm) 0.0))

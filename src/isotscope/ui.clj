@@ -67,6 +67,7 @@
           ;; some weird problem with charges:
           ;;pos-charge (Integer. pos-charge)
           ;;neg-charge (if (string? neg-charge) (Integer. neg-charge) neg-charge)
+          ;;cml-charge 
           total-charge (- pos-charge neg-charge)
           sf-dct (dissoc (dissoc sf-dct :+) :-)
             ]
