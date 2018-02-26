@@ -6,7 +6,7 @@
 ;;
 ;; SPDX-License-Identifier: EPL-2.0
 
-(defproject isotscope "0.1.1-SNAPSHOT"
+(defproject isotscope "0.1.2-SNAPSHOT"
   :description "isotscope: a iupac aware isotopic pattern generator"
   :url "http://example.com/FIXME"
   :license {:name "EPL-2.0"}
