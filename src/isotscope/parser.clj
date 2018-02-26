@@ -12,12 +12,19 @@
 (:require [clojure.string :as cljstr])
   )
 
-;; for iupac parsing
-(import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
 
 ;; for smiles parsing
 (import org.openscience.cdk.smiles.SmilesParser)
 (import org.openscience.cdk.DefaultChemObjectBuilder)
+(import org.openscience.cdk.tools.CDKHydrogenAdder)
+(import org.openscience.cdk.atomtype.CDKAtomTypeMatcher)
+(import org.openscience.cdk.tools.manipulator.AtomTypeManipulator)
+(import org.openscience.cdk.tools.manipulator.AtomContainerManipulator)
+
+;; for iupac parsing
+(import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
+
+
 
 
 ;; The task of the parser is to transform the
@@ -78,16 +85,43 @@
 )
 
 (defn smiles-to-mol [smi]
-    (let [sp (SmilesParser. (DefaultChemObjectBuildert/getInstance))]
+    (let [sp (SmilesParser. (DefaultChemObjectBuilder/getInstance))]
       (.parseSmiles sp smi)
     )
   )
 
+(defn add-hydrogens [mol]
+  (AtomContainerManipulator/convertImplicitToExplicitHydrogens mol)
+  mol
+)
+
+(defn add-hydrogens-old-2 [mol]
+    (def matcher (CDKAtomTypeMatcher/getInstance (.getBuilder mol)))
+    (doseq [atom (.atoms mol)]
+      (println "-->")
+      (def atom-type (.findMatchingAtomType matcher mol atom))
+      (AtomTypeManipulator/configure atom atom-type)
+    )
+    (.addImplicitHydrogens (CDKHydrogenAdder/getInstance (.getBuilder mol)) mol)
+    mol
+)
+
+(defn add-hydrogens-old [mol]
+  (def rslt (.addImplicitHydrogens (CDKHydrogenAdder/getInstance (DefaultChemObjectBuilder/getInstance)) mol))
+  (if (= rslt nil) (println "!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*"))
+  mol
+)
+
 (defn mol-to-sf [mol]
   (let [atoms (.atoms mol)]
-    (frequencies (map (fn [itm] (.getSymbol itm)) atoms))
+    (map (fn [[k v]] [(keyword k) v]) (seq (frequencies (map (fn [itm] (.getSymbol itm)) atoms))))
     )
-  )
+)
+
+(defn smiles-to-sf [smi]
+  (def smi (if (= (nth smi 0) "$") (subs smi 1) smi))
+  (mol-to-sf (add-hydrogens (smiles-to-mol smi)))
+)
 
 
 (defn to-pairs [lst]
@@ -109,7 +143,13 @@
       [symb (count-of-token token)]
       ;;[:Tc 11] ;; for now, handle IUPAC later -> actually raise error here!
       (try (seq (cml-to-sf (iupac-name-to-cml token)))
-      (catch Exception e [:NA :NA]))
+      (catch Exception e
+        (println "TRYING SMILES")
+        (try (seq (smiles-to-sf token))
+        (catch Exception e
+          (println ">>" e)
+          [:NA :NA]));; inner try
+        ));; outer try
     );; inner if
   )))
 

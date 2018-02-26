@@ -57,6 +57,7 @@
     (Thread/sleep 500)
     (let [inp (.getText editor)
           sf-dct (try (isotscope.parser/parse-sf-string inp) (catch Exception e {}))
+          _ (println "::-::" sf-dct)
           ;;pos-key (keyword "+") neg-key (keyword "-")
           pos-charge (get sf-dct :+) neg-charge (get sf-dct :-)
           pos-charge (if (= pos-charge nil) 0 pos-charge)
