@@ -12,7 +12,13 @@
 (:require [clojure.string :as cljstr])
   )
 
+;; for iupac parsing
 (import uk.ac.cam.ch.wwmm.opsin.NameToStructure)
+
+;; for smiles parsing
+(import org.openscience.cdk.smiles.SmilesParser)
+(import org.openscience.cdk.DefaultChemObjectBuilder)
+
 
 ;; The task of the parser is to transform the
 ;; input string from a raw input containing
@@ -71,6 +77,17 @@
          )
 )
 
+(defn smiles-to-mol [smi]
+    (let [sp (SmilesParser. (DefaultChemObjectBuildert/getInstance))]
+      (.parseSmiles sp smi)
+    )
+  )
+
+(defn mol-to-sf [mol]
+  (let [atoms (.atoms mol)]
+    (frequencies (map (fn [itm] (.getSymbol itm)) atoms))
+    )
+  )
 
 
 (defn to-pairs [lst]

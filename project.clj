@@ -11,7 +11,7 @@
   :url "http://example.com/FIXME"
   :license {:name "EPL-2.0"}
   :dependencies [[org.clojure/clojure "1.8.0"],
-                 ;;[org.openscience.cdk/cdk-bundle "2.0"]
+                 [org.openscience.cdk/cdk-bundle "2.0"]
                  [uk.ac.cam.ch.opsin/opsin-core "2.3.1"]
                  [cheshire "5.8.0"]
                  ]
