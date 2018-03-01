@@ -112,9 +112,15 @@
   mol
 )
 
+(defn mol-to-charge [mol]
+  (reduce + (map (fn [a] (.getFormalCharge a)) (.atoms mol)))
+  )
+
 (defn mol-to-sf [mol]
-  (let [atoms (.atoms mol)]
-    (map (fn [[k v]] [(keyword k) v]) (seq (frequencies (map (fn [itm] (.getSymbol itm)) atoms))))
+  (let [atoms (.atoms mol)
+        sf (map (fn [[k v]] [(keyword k) v]) (seq (frequencies (map (fn [itm] (.getSymbol itm)) atoms))))
+        ]
+        (add-sf-dicts (into (sorted-map) sf) (to-charge-dict (mol-to-charge mol)))
     )
 )
 
