@@ -6,8 +6,8 @@
 ;;
 ;; SPDX-License-Identifier: EPL-2.0
 
-(defproject isotscope "0.1.2-SNAPSHOT"
-  :description "isotscope: a iupac aware isotopic pattern generator"
+(defproject isotscope "0.1.3-SNAPSHOT"
+  :description "isotscope: A IUPAC and SMILES aware isotopic pattern generator"
   :url "http://example.com/FIXME"
   :license {:name "EPL-2.0"}
   :dependencies [[org.clojure/clojure "1.8.0"],
