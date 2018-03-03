@@ -191,3 +191,76 @@
       (map (fn [itm]
         (clojure.string/join "\t" [(first itm) (second itm)])) (sort (to-percentage-sf sf))))
   ))
+
+
+  ;; to handle parentheses, i.e.
+  ;; ( triethylamine )2
+  ;; or ( C6 H6 O12 )3
+  ;; we perform the following preprocessing step:
+  (defn preprocess-braces [arg-s]
+    ;;(def ^{:private true} idx 0)
+    ;;(def ^{:private true} idx-stack [])
+    ;;(def ^{:private true} repeat-amount "")
+    ;;(def ^{:private true} rslt "")
+    (let [
+      rslt (atom "")
+      s (cljstr/join [arg-s " "])
+      o-brc \(
+      c-brc \)
+      idx (atom 0)
+      idx-stack (atom [])
+      incr-idx (fn [] (swap! idx inc))
+      cchr (fn [] (nth s @idx))
+      repeat-amount (atom "")
+      continue-loop (atom (fn [] (< @idx (.length s))))
+    ]
+    (while (@continue-loop)
+      (cond (= (nth s @idx) o-brc) (reset! idx-stack (conj @idx-stack @idx))
+            (= (nth s @idx) c-brc)
+            (do
+                (def op-at (.peek @idx-stack))
+                (def cls-at (+ 0 @idx))
+                (reset! idx-stack (.pop @idx-stack))
+                (if (empty? @idx-stack)
+                  (do
+                    (incr-idx)
+                    (while (Character/isDigit (nth s @idx))
+                      (do
+                        (reset! repeat-amount (cljstr/join [@repeat-amount (nth s @idx)]))
+                        (incr-idx)
+                      )
+                    )
+                    ;; at this point we now
+                    ;; the opening brace pos <op-at>
+                    ;; the closing brace pos <cls-at>
+                    ;; and the number of repeats of the braced
+                    ;; string <repeat-amount>:
+                    ;; (println "{" op-at idx @repeat-amount "}")
+                    ;; the essential step is the following
+                    ;; we replace the string <s> with
+                    ;; the s[0:op-at]+s[op-at:cls-at]*repeat-amount+s[idx:]
+                    (reset! continue-loop (fn [] false))
+                    (reset! rslt (cljstr/join
+                      [(subs s 0 op-at)
+                       (cljstr/join
+                         (repeat (Integer. @repeat-amount)
+                          (cljstr/join [" " (subs s (+ 1 op-at) cls-at) " "])
+                         )
+                        )
+                       (subs s @idx)
+                      ]
+                    ))
+                  )
+              )
+            )
+      )
+      ;; (println @idx @idx-stack)
+      ;;
+      (incr-idx)
+      )
+      ;; (println (repeat 8 ".-. "))
+      ;; (println @rslt)
+      ;; (println (repeat 8 ".-. "))
+      (if (= @rslt "") s (preprocess-braces @rslt))
+      )
+    )
