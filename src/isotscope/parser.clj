@@ -73,26 +73,30 @@
                       (incr-idx)
                     )
                   )
-                  ;; at this point we now
-                  ;; the opening brace pos <op-at>
-                  ;; the closing brace pos <cls-at>
-                  ;; and the number of repeats of the braced
-                  ;; string <repeat-amount>:
-                  ;; (println "{" op-at idx @repeat-amount "}")
-                  ;; the essential step is the following
-                  ;; we replace the string <s> with
-                  ;; the s[0:op-at]+s[op-at:cls-at]*repeat-amount+s[idx:]
-                  (reset! continue-loop (fn [] false))
-                  (reset! rslt (cljstr/join
-                    [(subs s 0 op-at)
-                     (cljstr/join
-                       (repeat (Integer. @repeat-amount)
-                        (cljstr/join [" " (subs s (+ 1 op-at) cls-at) " "])
-                       )
-                      )
-                     (subs s @idx)
-                    ]
-                  ))
+                  (if (not= repeat-amount "")
+                    (do
+                    ;; at this point we now
+                    ;; the opening brace pos <op-at>
+                    ;; the closing brace pos <cls-at>
+                    ;; and the number of repeats of the braced
+                    ;; string <repeat-amount>:
+                    ;; (println "{" op-at idx @repeat-amount "}")
+                    ;; the essential step is the following
+                    ;; we replace the string <s> with
+                    ;; the s[0:op-at]+s[op-at:cls-at]*repeat-amount+s[idx:]
+                    (reset! continue-loop (fn [] false))
+                    (reset! rslt (cljstr/join
+                      [(subs s 0 op-at)
+                       (cljstr/join
+                         (repeat (Integer. @repeat-amount)
+                          (cljstr/join [" " (subs s (+ 1 op-at) cls-at) " "])
+                         )
+                        )
+                       (subs s @idx)
+                      ]
+                    ))
+                    );; end of do
+                  );; end of if
                 )
             )
           )
@@ -165,23 +169,6 @@
 
 (defn add-hydrogens [mol]
   (AtomContainerManipulator/convertImplicitToExplicitHydrogens mol)
-  mol
-)
-
-(defn add-hydrogens-old-2 [mol]
-    (def matcher (CDKAtomTypeMatcher/getInstance (.getBuilder mol)))
-    (doseq [atom (.atoms mol)]
-      (println "-->")
-      (def atom-type (.findMatchingAtomType matcher mol atom))
-      (AtomTypeManipulator/configure atom atom-type)
-    )
-    (.addImplicitHydrogens (CDKHydrogenAdder/getInstance (.getBuilder mol)) mol)
-    mol
-)
-
-(defn add-hydrogens-old [mol]
-  (def rslt (.addImplicitHydrogens (CDKHydrogenAdder/getInstance (DefaultChemObjectBuilder/getInstance)) mol))
-  (if (= rslt nil) (println "!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*"))
   mol
 )
 
