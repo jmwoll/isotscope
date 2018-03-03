@@ -52,12 +52,13 @@
   (.add cont-pane (JScrollPane. editor) grid1)
   (.setBackground editor edit-col)
   (.setForeground editor Color/WHITE)
+  (.setCaretColor editor Color/RED)
 
   (defn updater []
     (Thread/sleep 500)
     (let [inp (.getText editor)
           sf-dct (try (isotscope.parser/parse-sf-string inp) (catch Exception e {}))
-          _ (println "::-::" sf-dct)
+          _ (println "sum formula:" sf-dct)
           ;;pos-key (keyword "+") neg-key (keyword "-")
           pos-charge (get sf-dct :+) neg-charge (get sf-dct :-)
           pos-charge (if (= pos-charge nil) 0 pos-charge)
@@ -65,7 +66,6 @@
           total-charge (- pos-charge neg-charge)
           sf-dct (dissoc (dissoc sf-dct :+) :-)
             ]
-
     ;; -- handle charges
     (send charge-agent (fn [itm] total-charge))
     ;;(println "isopat is " (isotscope.isotope/rand-isopat-gen sf-dct 1000))
@@ -75,13 +75,6 @@
 
     (send calc-agent
       (fn [itm] (isotscope.parser/add-sf-dicts itm
-        ;; old code: (isotscope.isotope/rand-isopat-gen sf-dct 1000)
-        ;; the following code does not seem to work
-        ;; (assoc (assoc (isotscope.isotope/rand-isopat-gen sf-dct 1000) pos-key pos-charge) neg-key neg-charge)
-        ;; TODO: the new code does not work because of the following problem:
-        ;; the results-editor will also access the current isopat data. Therefore,
-        ;; the function results-editor also needs to be able to handle the
-        ;; charge entries for "+" and "-".
         (try (isotscope.isotope/rand-isopat-gen sf-dct 1000)
         (catch Exception e itm)
         ))))
