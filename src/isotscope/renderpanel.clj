@@ -89,6 +89,7 @@
         _ (println "net charge" charge)
         charge (max charge (- charge))
         data (into (sorted-map) (map (fn [[k v]] [(/ k charge) v]) data))
+        _ (println data)
         ]
 
         (.setColor g bg)
